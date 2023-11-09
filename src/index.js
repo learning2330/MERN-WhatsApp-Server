@@ -1,14 +1,36 @@
+import mongoose from "mongoose";
 import app from "./app.js";
 import Logger from "./configs/logger.js";
 
 // env variable
-const PORT = process.env.PORT || 8000;
+const DB_URL = process.env.DB_URL;
+const PORT = process.env.PORT;
+
+// exit on mongo error
+mongoose.connection.on("error", (err) => {
+  Logger.error(`MongoDB connected error : ${err}`);
+  process.exit(1);
+});
+
+// Mongodb debug mode
+if (process.env.NODE_ENV !== "production") {
+  mongoose.set("debug", true);
+}
+
+// Connect MongoDB
+mongoose
+  .connect(DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    Logger.info("Connected to MongoDB");
+  });
 
 let server;
 
 server = app.listen(PORT, () => {
   Logger.info(`Server is listening at ${PORT}...`);
-  console.log("process id", process.pid);
 });
 
 // Handle Server Error
@@ -16,7 +38,7 @@ server = app.listen(PORT, () => {
 const exitHandler = () => {
   if (server) {
     Logger.info("Server closed.");
-    process.emit(1);
+    process.exit(1);
   } else {
     process.exit(1);
   }
@@ -32,7 +54,7 @@ process.on("unhandledRejection", unexpectedErrorHandler);
 // SIGTERM
 process.on("SIGTERM", () => {
   if (server) {
-    Logger.info("Server Closed.");
-    process.emit(1);
+    Logger.info("Server closed.");
+    process.exit(1);
   }
 });
