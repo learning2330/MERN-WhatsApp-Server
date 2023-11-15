@@ -12,7 +12,6 @@ import routes from "./routes/index.js";
 
 // dotenv config
 dotenv.config();
-console.log("DB_URL:", process.env.DB_URL);
 
 // Create express app
 const app = express();

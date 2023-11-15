@@ -18,14 +18,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Connect MongoDB
-mongoose
-  .connect(DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    Logger.info("Connected to MongoDB");
-  });
+mongoose.connect(DB_URL);
 
 let server;
 
@@ -34,7 +27,6 @@ server = app.listen(PORT, () => {
 });
 
 // Handle Server Error
-
 const exitHandler = () => {
   if (server) {
     Logger.info("Server closed.");
