@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: [true, "Please provide your email address"],
-      unqiue: [true, "This email address already exist"],
+      unique: [true, "This email address already exist"],
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email address"],
     },
@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema(
         "Please make sure your password is atleast 6 characters long",
       ],
       maxLength: [
-        6,
+        128,
         "Please make sure your password is less then 128 characters long",
       ],
     },
